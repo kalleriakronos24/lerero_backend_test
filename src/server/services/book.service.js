@@ -6,7 +6,7 @@ class BookService extends Model {
         super();
         this.model = super.book();
     }
-
+    
     async getAllBooks() {
         try {
             return await this.model.findAll();

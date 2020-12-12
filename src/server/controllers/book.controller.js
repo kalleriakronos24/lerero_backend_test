@@ -10,7 +10,7 @@ class BookController extends Service {
 
 
     async getAllBooks(req, res) {
-        
+
         try {
             const allBooks = await super.bookService().getAllBooks();
             if (allBooks.length > 0) {
@@ -38,13 +38,20 @@ class BookController extends Service {
 
         try {
 
-            const createdBook = super.bookService().addBook(addBook);
-            util.setSuccess(201, "Book added!", createdBook); 
-            return util.send(res);
+            const createdBook = super.bookService().addBook(addBook)
+                .then(bookdata => {
+                    util.setSuccess(201, "Book added!", bookdata);
+                    return util.send(res);
+                })
+                .catch(e => util.setError(400, e));
+
+            return createdBook;
 
         } catch (e) {
+
             util.setError(400, e.message);
             return util.send(res);
+            
         }
     }
 

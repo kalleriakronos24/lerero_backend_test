@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./src/app.babel-register.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rm -rf ./build && babel -d ./build ./src -s",
+    "generate-lcov": "nyc report --reporter=text-lcov > lcov.info",
+    "coveralls-coverage": "coveralls < lcov.info",
+    "codeclimate-coverage": "codeclimate-test-reporter < lcov.info",
+    "coverage": "nyc npm test && npm run generate-lcov && npm run coveralls-coverage && npm run codeclimate-coverage",
+    "test": "export NODE_ENV=test && sequelize db:migrate:undo:all && sequelize db:migrate && nyc --require @babel/register mocha ./src/test/*.test.js"
   },
   "keywords": [],
   "author": "",
@@ -35,9 +40,13 @@
     "@babel/register": "^7.12.10",
     "@babel/runtime": "^7.12.5",
     "babel-loader": "^8.2.2",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "eslint": "^7.15.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "nodemon": "^2.0.6"
+    "mocha": "^8.2.1",
+    "nodemon": "^2.0.6",
+    "nyc": "^15.1.0"
   }
 }
