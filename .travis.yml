@@ -20,7 +20,6 @@ before_script:
   - npm install -g sequelize-cli
   - sequelize db:migrate
 script:
-  - npm test
+  - npm run test
 after_success:
   - npm run coverage
-
