@@ -6,16 +6,16 @@ require('dotenv').config();
 import cors from 'cors';
 import Routes from './server/routes/default.routes';
 
-// process.on('unhandledRejection', (rejectionErr) => {
-//     // won't execute
-//     console.log('unhandledRejection Err::', rejectionErr);
-//     console.log('unhandledRejection Stack::', JSON.stringify(rejectionErr))
-// })
+process.on('unhandledRejection', (rejectionErr) => {
+    // won't execute
+    console.log('unhandledRejection Err::', rejectionErr);
+    console.log('unhandledRejection Stack::', JSON.stringify(rejectionErr))
+})
 
-// process.on('uncaughtException', (uncaughtExc) => {
-//     console.log('uncaughtException Err::', uncaughtExc);
-//     console.log('uncaughtException Stack::', JSON.stringify(uncaughtExc));
-// })
+process.on('uncaughtException', (uncaughtExc) => {
+    console.log('uncaughtException Err::', uncaughtExc);
+    console.log('uncaughtException Stack::', JSON.stringify(uncaughtExc));
+})
 
 const app = express();
 let workers = [];
