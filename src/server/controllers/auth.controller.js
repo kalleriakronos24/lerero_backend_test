@@ -16,6 +16,16 @@ class AuthController extends Service {
 
     };
 
+
+    async userLogin(req,res) {
+
+        const auth = super.authService();
+        const body = req.body;
+
+        return await auth.login(res, body);
+        
+    }
+
 };
 
 

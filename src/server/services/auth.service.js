@@ -35,7 +35,7 @@ class AuthService {
         const emailCheck = await this.checkIfEmailExist(email);
 
         if (emailCheck) {
-            this.util.setError(401, "Email has been used, please use another email !!!!!!");
+            this.util.setError(401, "Email has been used, please use another email");
             return this.util.send(response);
         };
 
@@ -68,18 +68,63 @@ class AuthService {
 
     };
 
-    comparePassword(password) {
+    async comparePassword(password, email) {
 
 
+        const userData = await this.user.findOne({ where: { email } });
+        let isPasswordMatch;
+
+        if (userData) {
+            isPasswordMatch = bcrypt.compareSync(password, userData.password);
+        }; 
+
+        return isPasswordMatch;
 
     }
 
 
-    login(user) {
+    async login(res, user) {
 
-    }
 
-    validateUser(username, password) {
+        const { password, email } = user;
+
+
+        const validateUser = await this.validateUser(user);
+
+        if(!validateUser){
+            this.util.setError(401, "Email not found");
+            this.util.send(res);
+            return;
+        } 
+
+
+        const isPasswordMatch = await this.comparePassword(password, email);
+
+        if (isPasswordMatch) {
+
+            const userData = await this.user.findOne({ where: { email } });
+
+            const token = await this.generateToken({ ...userData });
+
+            this.util.setSuccess(201, "Login Successful", { token });
+            return this.util.send(res);
+
+        } else {
+
+            this.util.setError(401, "password is incorrect, please try again");
+            return this.util.send(res);
+
+        }
+
+    };
+
+    validateUser(body) {
+
+        const { email } = body;
+
+        const isEmailValid = this.checkIfEmailExist(email);
+
+        return isEmailValid;
 
     }
 

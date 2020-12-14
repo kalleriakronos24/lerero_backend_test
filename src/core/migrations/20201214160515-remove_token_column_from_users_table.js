@@ -18,7 +18,7 @@ module.exports = {
      * await queryInterface.dropTable('users');
      */
 
-    return queryInterface.removeColumn('Users', 'token')
+    // return queryInterface.removeColumn('Users', 'token')
   }
-  
+
 };

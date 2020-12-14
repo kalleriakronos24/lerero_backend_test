@@ -11,7 +11,8 @@
     "codeclimate-coverage": "codeclimate-test-reporter < lcov.info",
     "coverage": "nyc npm test && npm run generate-lcov && npm run coveralls-coverage && npm run codeclimate-coverage",
     "test": "export NODE_ENV=test && sequelize db:migrate:undo:all && sequelize db:migrate && nyc --require @babel/register mocha ./src/test/*.test.js --timeout 20000 --exit",
-    "db:migrate" : "sequelize db:migrate"
+    "db:migrate" : "sequelize db:migrate",
+    "test:endpoint" : "export NODE_ENV=test && sequelize db:migrate:undo:all && sequelize db:migrate && nyc --require @babel/register mocha ./src/test/*.test.js --timeout 20000 --exit"
   },
   "keywords": [],
   "author": "",

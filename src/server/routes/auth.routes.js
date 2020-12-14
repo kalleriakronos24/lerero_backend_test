@@ -11,6 +11,7 @@ class AuthRoutes extends Controller {
     route(){
         return [
             this.router.post('/auth/sign-up', super.authController().userRegister),
+            this.router.post('/auth/sign-in', super.authController().userLogin)
         ]
     }
 };
