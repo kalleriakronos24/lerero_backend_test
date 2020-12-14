@@ -3,8 +3,12 @@ import database from '../../core/models/index';
 
 class Model {
 
-    book(){
+    book() {
         return database.Book
+    }
+
+    user() {
+        return database.User
     }
     
 }
