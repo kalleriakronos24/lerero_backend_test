@@ -82,7 +82,7 @@ describe('User Endpoint Tests : ', () => {
                 expect(res.body.data.token).to.not.null
                 expect(res.body.data.token).to.not.false
                 done();
-                
+
             });
 
 
@@ -132,6 +132,22 @@ describe('User Endpoint Tests : ', () => {
     })
 
 
+    it('it should not possible to create a user with the existing email', (done) => {
+        const body = {
+            email: "madacool222@gmail.com",
+            password: '123456678'
+        };
+
+        chai.request(app_url)
+            .post('/api/v1/auth/sign-up')
+            .set('Accept', 'application/json')
+            .send(body)
+            .end((err, res) => {
+                expect(res.status).to.equal(401)
+                expect(res.body.message).to.equal("Email has been used, please use another email");
+                done()
+            })
+    })
 
 });
 

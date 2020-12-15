@@ -1,3 +1,4 @@
+import { resolve } from 'path';
 import Service from '../services/default.service';
 import Util from '../utils/customResponse';
 
@@ -27,9 +28,9 @@ class BookController extends Service {
 
     async addNewBook(req, res) {
 
-        const { title, price, description } = req.body;
+        const { title, price, description, userId } = req.body;
 
-        if (!title || !price || !description) {
+        if (!title || !price || !description || !userId) {
             util.setError(400, "Please Provide A Complete Data");
             return util.send(res);
         }
@@ -38,20 +39,17 @@ class BookController extends Service {
 
         try {
 
-            const createdBook = super.bookService().addBook(addBook)
-                .then(bookdata => {
-                    util.setSuccess(201, "Book added!", bookdata);
-                    return util.send(res);
-                })
-                .catch(e => util.setError(400, e));
+            const newBook = await super.bookService().addBook(addBook)
+                .then(response => response)
+                .catch(err => err);
 
-            return createdBook;
+            util.setSuccess(201, "Book added!", newBook);
+            return util.send(res);
 
         } catch (e) {
-
             util.setError(400, e.message);
             return util.send(res);
-            
+
         }
     }
 

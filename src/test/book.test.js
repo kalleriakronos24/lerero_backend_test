@@ -14,7 +14,8 @@ describe('Book Endpoint Tests :', () => {
         const book = {
             title: 'My Test Book',
             price: 'Rp.1000',
-            description: 'test description'
+            description: 'test description',
+            userId: 1
         };
 
         chai.request(app_url)
@@ -23,11 +24,12 @@ describe('Book Endpoint Tests :', () => {
             .send(book)
             .end((err, res) => {
                 expect(res.status).to.equal(201);
+                expect(res.body.message).to.equal('Book added!');
                 expect(res.body.data).to.include({
-                    id: 1,
                     title: 'My Test Book',
                     price: 'Rp.1000',
-                    description: 'test description'
+                    description: 'test description',
+                    userId: 1
                 })
                 done();
             })
@@ -59,6 +61,7 @@ describe('Book Endpoint Tests :', () => {
                 res.body.data[0].should.have.property('title')
                 res.body.data[0].should.have.property('price')
                 res.body.data[0].should.have.property('description');
+                res.body.data[0].should.have.property('userId');
                 done();
             })
     })
