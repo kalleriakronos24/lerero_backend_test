@@ -9,7 +9,13 @@ class BookController extends Service {
         super();
     };
 
-
+    /**
+     * 
+     * @param {*} req Request
+     * @param {*} res Response
+     * @description retrieve all the Books from the Book Model
+     * @returns Books { id, title, price, description, userId }
+     */
     async getAllBooks(req, res) {
 
         try {
@@ -26,6 +32,13 @@ class BookController extends Service {
         }
     }
 
+    /**
+     * 
+     * @param {*} req Request
+     * @param {*} res Response
+     * @description add new book to the Book Model 
+     * @returns if the one of data isn't provided returns status 400 | status 200 with new Books created
+     */
     async addNewBook(req, res) {
 
         const { title, price, description, userId } = req.body;

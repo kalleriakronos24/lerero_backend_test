@@ -13,13 +13,25 @@ class AuthService {
         this.util = new Util();
     };
 
+    /**
+     * 
+     * @param {*} user Users
+     * @description generate token jwt, this only triggers if all the validation is meet the conditions
+     * @returns JwtToken
+     */
     async generateToken(user) {
 
-        const token = await this.jwt.signInToken(user);
+        const token = this.jwt.signInToken(user);
 
         return token;
     };
 
+    /**
+     * 
+     * @param {*} password string
+     * @description Password Hashing using bcrypt
+     * @returns hashedPassword with length 10
+     */
     async hashPassword(password) {
 
         const hashPassword = bcrypt.hashSync(password, 10);
@@ -28,6 +40,14 @@ class AuthService {
     };
 
 
+    /**
+     * 
+     * @param {*} response Response
+     * @param {*} user { email: string , password: string }
+     * @async userRegister
+     * @description Service to Register user to the Database
+     * @returns Users { id: number, fullname: string, username: string, wallet: number }
+     */
     async userRegister(response, user) {
 
         const { email, password } = user;
@@ -55,7 +75,12 @@ class AuthService {
 
     };
 
-
+    /**
+     * 
+     * @param {*} email string
+     * @description email validation, check email if exists
+     * @returns Null | Users
+     */
     async checkIfEmailExist(email) {
 
         return new Promise(async (resolve, reject) => {
@@ -68,21 +93,35 @@ class AuthService {
 
     };
 
-    async comparePassword(password, email) {
 
+    /**
+     * 
+     * @param {*} password string
+     * @param {*} email string
+     * 
+     * @description compare client's password to database user's password, if match then the user is valid
+     * @returns Boolean
+     */
+    async comparePassword(password, email) {
 
         const userData = await this.user.findOne({ where: { email } });
         let isPasswordMatch;
 
         if (userData) {
             isPasswordMatch = bcrypt.compareSync(password, userData.password);
-        }; 
+        };
 
         return isPasswordMatch;
 
     }
 
-
+    /**
+     * 
+     * @param {*} res Reponse
+     * @param {*} user { password: string , email: string }
+     * @description Service to User to Login, checks if data the user's input is valid or not
+     * @returns JwtToken | if email not found return json { message : "Email not found" } | if email is valid but the password is incorrect return json { message : "password is incorrect, try again" }
+     */
     async login(res, user) {
 
 
@@ -91,11 +130,11 @@ class AuthService {
 
         const validateUser = await this.validateUser(user);
 
-        if(!validateUser){
+        if (!validateUser) {
             this.util.setError(401, "Email not found");
             this.util.send(res);
             return;
-        } 
+        }
 
 
         const isPasswordMatch = await this.comparePassword(password, email);
@@ -118,6 +157,12 @@ class AuthService {
 
     };
 
+    /**
+     * 
+     * @param {*} body { email: string, password: string }
+     * @description to validate user, literally using the other method ( checkEmailIfExist )
+     * @returns Boolean 
+     */
     validateUser(body) {
 
         const { email } = body;

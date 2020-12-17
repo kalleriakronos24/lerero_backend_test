@@ -7,6 +7,10 @@ class BookService extends Model {
         this.model = super.book();
     }
     
+    /**
+     * @description retrieve all the books from Book Model
+     * @returns Books
+     */
     async getAllBooks() {
         try {
             return await this.model.findAll();
@@ -15,6 +19,12 @@ class BookService extends Model {
         }
     }
 
+    /**
+     * 
+     * @param {*} newBook Books
+     * @description add new Books to the Book Model
+     * @returns Books
+     */
     async addBook(newBook){
         try{
             return await this.model.create(newBook);

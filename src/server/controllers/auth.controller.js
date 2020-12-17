@@ -7,6 +7,13 @@ class AuthController extends Service {
 
     };
 
+    /**
+     * 
+     * @param {*} req Request
+     * @param {*} res Response
+     * @description registering a user to the database via endpoint /auth/sign-up with all the data provided by the client
+     * @returns JwtToken if all the conditions meet
+     */
     async userRegister(req,res) {
 
         const auth = super.authService();
@@ -16,7 +23,13 @@ class AuthController extends Service {
 
     };
 
-
+    /**
+     * 
+     * @param {*} req Request
+     * @param {*} res Response
+     * @description login user to the server, if all the data is valid, gives a user JwtToken to access the frontend's application
+     * @returns JwtToken if all the conditions meet
+     */
     async userLogin(req,res) {
 
         const auth = super.authService();
