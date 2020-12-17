@@ -17,7 +17,7 @@ class AuthService {
      * 
      * @param {*} user Users
      * @description generate token jwt, this only triggers if all the validation is meet the conditions
-     * @returns JwtToken
+     * @returns JwtToken1
      */
     async generateToken(user) {
 
