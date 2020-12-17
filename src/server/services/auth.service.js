@@ -141,7 +141,9 @@ class AuthService {
 
         if (isPasswordMatch) {
 
-            const userData = await this.user.findOne({ where: { email } });
+            const userData = await this.user.findOne({ where: { email } })
+                .then(res => res)
+                .catch(err => err);
 
             const token = await this.generateToken({ ...userData });
 
