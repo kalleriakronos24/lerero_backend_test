@@ -97,7 +97,7 @@ describe('Book Endpoint Tests :', () => {
         });
     })
 
-    it('it should not possible to access /book/get/all/books route (with auth middleware) with a empty token / invalid token', (done) => {
+    it('it should not possible to access /book/get/all-books route (with auth middleware) with a empty token / invalid token', (done) => {
 
         const body = {
             email: "madacool222@gmail.com",
