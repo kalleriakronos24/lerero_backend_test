@@ -13,24 +13,22 @@ class JwtAuthenticate {
      */
     authenticateToken(req, res, next) {
 
-        const header = req.headers['Authorization'];
+        
+        const header = req.headers['authorization'];
 
         const token = header && header.split(' ')[1];
 
-        if (token === null) {
+        if (!token) {
             return res.sendStatus(401);
         }
 
         // else
-        console.log('SECRET JWT', process.env.JWT_SECRET);
 
         jwt.verify(token, process.env.JWT_SECRET, (err, data) => {
 
             if (err) {
                 return res.sendStatus(403);
             }
-
-            req.user = data;
 
             next();
         });

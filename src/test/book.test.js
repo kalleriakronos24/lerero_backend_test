@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import 'chai/register-should';
 import { app_url } from '../app';
-
+import request from 'request';
 
 chai.use(chaiHttp);
 
@@ -64,5 +64,65 @@ describe('Book Endpoint Tests :', () => {
                 res.body.data[0].should.have.property('userId');
                 done();
             })
+    });
+
+
+    it('it should have access token to access /book/get/all-books route', (done) => {
+
+        const body = {
+            email: "madacool222@gmail.com",
+            password: '12345678'
+        };
+
+        request.post(`${app_url}/api/v1/auth/sign-in`, {
+            headers: {
+                'Accept': 'application/json'
+            },
+            form : {
+                email : body.email,
+                password : body.password
+            }
+        }, (err, res, responseBody) => {
+
+            chai.request(app_url)
+                .get('/api/v1/book/get/all-books')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${JSON.parse(responseBody).data.token}`)
+                .end((error, response) => {
+                    expect(response.status).to.not.equal(401);
+                    expect(response.status).to.not.equal(403);
+                    done();
+                })
+
+        });
+    })
+
+    it('it should not possible to access /book/get/all/books route (with auth middleware) with a empty token / invalid token', (done) => {
+
+        const body = {
+            email: "madacool222@gmail.com",
+            password: '12345678'
+        };
+
+        request.post(`${app_url}/api/v1/auth/sign-in`, {
+            headers: {
+                'Accept': 'application/json'
+            },
+            form : {
+                email : body.email,
+                password : body.password
+            }
+        }, (err, res, responseBody) => {
+
+            chai.request(app_url)
+                .get('/api/v1/book/get/all-books')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${JSON.parse(responseBody).data.token + 'aaaa'}`)
+                .end((error, response) => {
+                    expect(response.status).to.be.oneOf([401,403]);
+                    done();
+                })
+
+        });
     })
 })

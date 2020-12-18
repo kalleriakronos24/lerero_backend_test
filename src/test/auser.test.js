@@ -147,7 +147,9 @@ describe('User Endpoint Tests : ', () => {
                 expect(res.body.message).to.equal("Email has been used, please use another email");
                 done()
             })
-    })
+    });
+
+    
 
 });
 
