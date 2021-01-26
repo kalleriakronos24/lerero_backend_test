@@ -39,6 +39,20 @@ class AuthController extends Service {
         
     }
 
+    async setUsersCookie(req,res) {
+
+        const auth = super.authService();
+        const body = req.body;
+
+        return await auth.setUsersCookie(req, res, body.value);
+    }
+
+    async fetchUsersCookie(req,res) {
+
+        const auth = super.authService();
+
+        return auth.fetchUsersCookie(req, res);
+    }
 };
 
 

@@ -21,13 +21,14 @@ class BookController extends Service {
         try {
             const allBooks = await super.bookService().getAllBooks();
             if (allBooks.length > 0) {
-                util.setSuccess(200, "Books Retrieved", allBooks);
+                util.setSuccess(200, "Books Retrieved", req.csrfToken());
             } else {
                 util.setSuccess(200, "No Data Retrieved");
             }
+
             return util.send(res);
         } catch (e) {
-            util.setError(400, e);
+            util.setError(400, req.csrfToken());
             return util.send(res);
         }
     }

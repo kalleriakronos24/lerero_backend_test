@@ -1,3 +1,4 @@
+import CsrfProtection from './csurf';
 import JwtAuthenticate from './jwt';
 
 
@@ -8,6 +9,10 @@ class Middlewares {
      */
     jwt() {
         return new JwtAuthenticate()
+    }
+
+    csrf() {
+        return new CsrfProtection();
     }
     
 };

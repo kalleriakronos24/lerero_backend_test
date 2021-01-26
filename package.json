@@ -12,7 +12,7 @@
     "coverage": "nyc npm test && npm run generate-lcov && npm run coveralls-coverage && npm run codeclimate-coverage",
     "test": "export NODE_ENV=test && sequelize db:migrate:undo:all && sequelize db:migrate && nyc --require @babel/register mocha ./src/test/*.test.js --timeout 20000 --exit",
     "db:migrate": "sequelize db:migrate",
-    "test:endpoint": "export NODE_ENV=test && sequelize db:migrate:undo:all && sequelize db:migrate && mocha --require @babel/register ./src/test/*.test.js --timeout 20000 --exit"
+    "test:endpoint": "export NODE_ENV=test && git && sequelize db:migrate:undo:all && sequelize db:migrate && mocha --require @babel/register ./src/test/*.test.js --timeout 20000 --exit"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +21,10 @@
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cluster": "^0.7.7",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
+    "crypto-js": "^4.0.0",
+    "csurf": "^1.11.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "http": "0.0.1-security",
@@ -53,7 +56,6 @@
     "eslint-plugin-import": "^2.22.1",
     "mocha": "^8.2.1",
     "nodemon": "^2.0.6",
-    "nyc": "^15.1.0",
-    "request": "^2.88.2"
+    "nyc": "^15.1.0"
   }
 }

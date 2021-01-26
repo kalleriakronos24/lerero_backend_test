@@ -165,14 +165,65 @@ class AuthService {
      * @description to validate user, literally using the other method ( checkEmailIfExist )
      * @returns Boolean 
      */
-    validateUser(body) {
+    async validateUser(body) {
 
         const { email } = body;
 
-        const isEmailValid = this.checkIfEmailExist(email);
+        const isEmailValid = await this.checkIfEmailExist(email);
 
         return isEmailValid;
 
+    }
+
+    /**
+     * 
+     * @param {*} req Request
+     * @param {*} body Body
+     */
+    async setUsersCookie(req, res, value) {
+
+        try {
+
+            const cookies = req.cookies;
+            let cookiesLength = null;
+
+            if (Object.keys(cookies).length === 0) {
+
+                cookiesLength = 0;
+
+            } else {
+
+                cookiesLength = Object.keys(cookies).length + 1;
+
+            }
+
+            res.cookie(`user-${cookiesLength + 1}`, value);
+            this.util.setSuccess(201, "Cookie Set", { value });
+            this.util.send(res);
+
+        } catch (e) {
+
+            this.util.setError(401, "Set Cookie Failed", { reasons : e });
+            this.util.send(res);
+
+        }
+
+    }
+
+    fetchUsersCookie(req, res) {
+
+        try {
+
+            const cookies = req.cookies
+
+            this.util.setSuccess(201, "Cookie Parsed", { dat: cookies });
+            this.util.send(res);
+
+        } catch (e) {
+
+            this.util.setSuccess(201, "Failed to Parse the Cookies", { reasons: e });
+            this.util.send(res);
+        }
     }
 
 };

@@ -133,6 +133,7 @@ describe('User Endpoint Tests : ', () => {
 
 
     it('it should not possible to create a user with the existing email', (done) => {
+        
         const body = {
             email: "madacool222@gmail.com",
             password: '123456678'
@@ -149,7 +150,7 @@ describe('User Endpoint Tests : ', () => {
             })
     });
 
-    
+
 
 });
 

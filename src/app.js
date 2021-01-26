@@ -4,7 +4,9 @@ import bodyParser from 'body-parser';
 import cluster from 'cluster';
 require('dotenv').config();
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import Routes from './server/routes/default.routes';
+import csurf from 'csurf';
 
 process.on('unhandledRejection', (rejectionErr) => {
     // won't execute
@@ -88,9 +90,16 @@ class App extends Routes {
         app.use(bodyParser.urlencoded({ extended: false }))
         app.disable('x-powered-by')
 
-        // cross origin configuration
 
+        // cookie parser and CSRF Middleware
+        app.use(cookieParser());
+        app.use(csurf({ cookie : {
+            expires : new Date(Date.now() + 8 * 3600000) // or in 8 hours it'll expire
+        }}));
+        
+        // cross origin configuration
         app.use(cors());
+        
         app.use((req, res, next) => {
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
