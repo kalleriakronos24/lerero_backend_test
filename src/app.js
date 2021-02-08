@@ -91,11 +91,16 @@ class App extends Routes {
         app.disable('x-powered-by')
 
 
+
+        // routes
+        app.use('/api/v1', super.route())
+
+
         // cookie parser and CSRF Middleware
         app.use(cookieParser());
-        app.use(csurf({ cookie : {
-            expires : new Date(Date.now() + 8 * 3600000) // or in 8 hours it'll expire
-        }}));
+        // app.use(csurf({ cookie : true }));
+
+
         
         // cross origin configuration
         app.use(cors());
@@ -108,12 +113,12 @@ class App extends Routes {
             if (req.method == 'OPTIONS') {
                 return res.sendStatus(200);
             }
+
             next();
         });
 
-        // routes
-        app.use('/api/v1', super.route())
-        // app.use(super.route());
+
+
         app.use('/public', express.static('./public'));
 
         // start server

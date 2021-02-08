@@ -21,7 +21,7 @@ class BookController extends Service {
         try {
             const allBooks = await super.bookService().getAllBooks();
             if (allBooks.length > 0) {
-                util.setSuccess(200, "Books Retrieved", req.csrfToken());
+                util.setSuccess(200, "Books Retrieved", allBooks);
             } else {
                 util.setSuccess(200, "No Data Retrieved");
             }
@@ -56,11 +56,12 @@ class BookController extends Service {
             const newBook = await super.bookService().addBook(addBook)
                 .then(response => response)
                 .catch(err => err);
-
+            
             util.setSuccess(201, "Book added!", newBook);
             return util.send(res);
 
         } catch (e) {
+
             util.setError(400, e.message);
             return util.send(res);
 

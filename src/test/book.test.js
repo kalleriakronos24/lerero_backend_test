@@ -19,7 +19,7 @@ describe('Book Endpoint Tests :', () => {
         };
 
         chai.request(app_url)
-            .post('/api/v1/book/add-book')
+            .post('/api/v1/book/add-books')
             .set('Accept', 'application/json')
             .send(book)
             .end((err, res) => {
@@ -42,7 +42,7 @@ describe('Book Endpoint Tests :', () => {
         }
 
         chai.request(app_url)
-            .post('/api/v1/book/add-book')
+            .post('/api/v1/book/add-books')
             .set('Accept', 'application/json')
             .send(book)
             .end((err, res) => {
