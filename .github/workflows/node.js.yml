@@ -20,6 +20,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - uses: harmon758/postgresql-action@v1
+    - name: Use PostgreSQL version 11
+      with: 
+        postgresql version: '11'
     - name: Tests And Coverage
       run: |
         npm install -g sequelize-cli
