@@ -28,7 +28,6 @@ jobs:
         postgresql db: books_management_test
     - name: Tests And Coverage
       run: |
-        npm install -g sequelize-cli
         npm install
         npm run test
       env:
@@ -47,6 +46,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         script: |
+          cd neptscc
           git pull origin main
           npm install
           pm2 restart neptscc

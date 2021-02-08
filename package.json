@@ -20,6 +20,7 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "cli": "^1.0.1",
     "cluster": "^0.7.7",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -34,7 +35,7 @@
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "save": "^2.4.0",
-    "sequelize": "^6.3.5"
+    "sequelize": "^6.5.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
