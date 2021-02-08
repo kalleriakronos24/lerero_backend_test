@@ -21,9 +21,12 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - uses: harmon758/postgresql-action@v1
-    - name: Use PostgreSQL version 11
-      with: 
+    - name: Use PostgreSQL
+      with:
         postgresql version: '11'
+        postgresql user: postgresql
+        postgresql password: pusamania94
+        postgresql db: books_management_test
     - name: Tests And Coverage
       run: |
         npm install -g sequelize-cli
