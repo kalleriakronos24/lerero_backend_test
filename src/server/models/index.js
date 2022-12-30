@@ -4,13 +4,6 @@ import database from '../../core/models/index';
 class Model {
 
     /**
-     * @description Books | Book Model
-     */
-    book() {
-        return database.Book
-    }
-
-    /**
      * @description Users | User Model
      */
     user() {
