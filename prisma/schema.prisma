@@ -1,0 +1,147 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// user role
+// administrator
+// provider
+// learner
+
+// some notes
+// register the course provider as provider
+
+// master data
+model User {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  username  String
+  password  String
+  userRole  String
+  createdAt DateTime? @db.Timestamp()
+  updatedAt DateTime? @db.Timestamp()
+  course    Course[]
+}
+
+model Course {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  description  String
+  coverImage   String
+  keyword      String
+  userId       String         @db.ObjectId
+  start        DateTime?      @db.Date
+  finish       DateTime?      @db.Date
+  status       String
+  createdAt    DateTime?      @db.Timestamp()
+  updatedAt    DateTime?      @db.Timestamp()
+  user         User           @relation(fields: [userId], references: [id])
+  courseModule CourseModule[]
+}
+
+model Module {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  activityId   String         @db.ObjectId
+  createdAt    DateTime?      @db.Timestamp()
+  updatedAt    DateTime?      @db.Timestamp()
+  activity     Activity       @relation(fields: [activityId], references: [id])
+  courseModule CourseModule[]
+}
+
+model Activity {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  description    String
+  fileUrl        String
+  fileExt        String
+  createdAt      DateTime?        @db.Timestamp()
+  updatedAt      DateTime?        @db.Timestamp()
+  module         Module[]
+  courseActivity CourseActivity[]
+}
+
+// model SystemMenu {
+//   id               String             @id @default(auto()) @map("_id") @db.ObjectId
+//   name             String
+//   uri              String
+//   active           Boolean            @default(true)
+//   createdAt        DateTime           @db.Timestamp()
+//   updatedAt        DateTime           @db.Timestamp()
+//   systemMenuDetail SystemMenuDetail[]
+// }
+
+// model SystemMenuDetail {
+//   id        String     @id @default(auto()) @map("_id") @db.ObjectId
+//   menuId    String     @db.ObjectId
+//   name      String
+//   uri       String
+//   active    Boolean    @default(true)
+//   createdAt DateTime   @db.Timestamp()
+//   updatedAt DateTime   @db.Timestamp()
+//   menu      SystemMenu @relation(fields: [menuId], references: [id])
+// }
+
+// model SystemModule {
+//   id               String             @id @default(auto()) @map("_id") @db.ObjectId
+//   name             String
+//   description      String
+//   access           String
+//   active           String
+//   createdAt        DateTime           @db.Timestamp()
+//   updatedAt        DateTime           @db.Timestamp()
+//   SystemUserAccess SystemUserAccess[]
+// }
+
+// model SystemUserAccess {
+//   id          String       @id @default(auto()) @map("_id") @db.ObjectId
+//   userId      String       @db.ObjectId
+//   sysModuleId String       @db.ObjectId
+//   sysModule   SystemModule @relation(fields: [sysModuleId], references: [id])
+//   user        User         @relation(fields: [userId], references: [id])
+// }
+
+// model SystemUserMenu {
+//   id          String @id @default(auto()) @map("_id") @db.ObjectId
+//   userId      String @db.ObjectId
+//   sysModuleId String @db.ObjectId
+// }
+
+// model SystemUserMenuDetail {
+//   id          String @id @default(auto()) @map("_id") @db.ObjectId
+//   userId      String @db.ObjectId
+//   sysModuleId String @db.ObjectId
+// }
+// end of master data
+
+model CourseModule {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  order          Int
+  courseId       String           @db.ObjectId
+  moduleId       String           @db.ObjectId
+  status         String
+  createdAt      DateTime?        @db.Timestamp()
+  updatedAt      DateTime?        @db.Timestamp()
+  module         Module           @relation(fields: [moduleId], references: [id])
+  course         Course           @relation(fields: [courseId], references: [id])
+  courseActivity CourseActivity[]
+}
+
+model CourseActivity {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  order          Int
+  courseModuleId String       @db.ObjectId
+  activityId     String       @db.ObjectId
+  status         String
+  createdAt      DateTime?    @db.Timestamp()
+  updatedAt      DateTime?    @db.Timestamp()
+  activty        Activity     @relation(fields: [activityId], references: [id])
+  courseModule   CourseModule @relation(fields: [courseModuleId], references: [id])
+}

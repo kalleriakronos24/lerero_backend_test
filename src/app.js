@@ -7,6 +7,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import Routes from './server/routes/default.routes';
 import csurf from 'csurf';
+import mongoose from 'mongoose';
 
 process.on('unhandledRejection', (rejectionErr) => {
     // won't execute
@@ -52,7 +53,6 @@ class App extends Routes {
             workers[i].on('message', (msg) => {
                 console.log(msg)
             })
-
         }
 
         // process is clustered on a core and process id is assigned
@@ -90,8 +90,6 @@ class App extends Routes {
         app.use(bodyParser.urlencoded({ extended: false }))
         app.disable('x-powered-by')
 
-
-
         // routes
         app.use('/api/v1', super.route())
 
@@ -101,19 +99,17 @@ class App extends Routes {
         // app.use(csurf({ cookie : true }));
 
 
-        
+
         // cross origin configuration
         app.use(cors());
-        
+
         app.use((req, res, next) => {
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
             res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
             if (req.method == 'OPTIONS') {
                 return res.sendStatus(200);
             }
-
             next();
         });
 
@@ -121,12 +117,32 @@ class App extends Routes {
 
         app.use('/public', express.static('./public'));
 
-        // start server
-        app.server.listen('8000', () => {
-            console.log(`Started server on => http://localhost:${app.server.address().port} for Process Id ${process.pid}`);
-        });
+
+        // mongodb configuration
+        const options = {
+            socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+            family: 4 // Use IPv4, skip trying IPv6
+        };
+
+        /**
+         * @description MongoDB connection
+         */
+
+        let uri = process.env.DATABASE_URL
+        let dev = ['192.168.43.178', 'localhost'];
 
 
+        mongoose.set('strictQuery', true);
+        mongoose.connect(uri, options)
+            .then(() => {
+                // start server
+                app.server.listen('8000', () => {
+                    console.log(`Started server on => http://${dev[1]}:${app.server.address().port} for Process Id ${process.pid}`);
+                });
+            })
+            .catch((err) => {
+                throw new Error(err)
+            })
 
         // in case of an error
         app.on('error', (appErr, appCtx) => {
@@ -143,33 +159,6 @@ class App extends Routes {
      */
     setUpCronJob() {
 
-        // (new CronJob('* * * * * *', () => {
-
-        //     // tasks
-
-        //     // const Order = OrderSchema;
-
-        //     // Order.find({}, (err,res) => {
-
-        //     //     if(res){
-
-        //     //         return res.map((v,i) => {
-
-        //     //             // check wheter all the item of order status is true
-        //     //             let check = v.item.every((x,y) => x.status === true);
-
-
-
-        //     //         })
-
-        //     //     }
-
-        //     // })
-
-
-
-
-        // }, null, true, 'Asia/Makassar')).start();
     }
 
     setUpSockets(port) {
@@ -178,35 +167,6 @@ class App extends Routes {
 
         const io = socketIo(app.server, {
             transports: ['websocket']
-        });
-
-
-        // create the socket
-        io.on('connection', (socket) => {
-
-            const updateStatus = (id, bool, socket_id) => new UserController().setStatusUserToOnline(id, bool, socket_id)
-            const emitOrderToCourier = (token) => new SocketController().getCurrentOrderCourier(token);
-
-            socket.on('userConnected', (token) => {
-
-                if (token !== undefined || token !== null || token !== "") {
-                    socket._id = token;
-                    console.log(token + ' connected');
-                    updateStatus(token, true, socket.id);
-                } else {
-                    console.log('token invalid, return');
-                }
-            });
-
-
-            // fired up when the user disconnected
-            socket.on('disconnect', () => {
-                console.log('someone disconnected');
-                if (socket._id) {
-                    console.log(socket._id + ' disconnected');
-                    updateStatus(socket._id, false, socket.id);
-                }
-            })
         })
     };
 
@@ -221,7 +181,7 @@ class App extends Routes {
     setupServer(isClusterRequired) {
 
         // if it is a master process then call setting up worker process
-        if (isClusterRequired && cluster.isMaster) {
+        if (isClusterRequired && cluster.isPrimary) {
             this.setupWorkerProcesses();
         } else {
             // to setup server configurations and share port address for incoming requests

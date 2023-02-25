@@ -1,15 +1,34 @@
-import database from '../../core/models/index';
+import Activity from "./activity";
+import Course from "./course";
+import CourseActivity from "./courseActivity";
+import CourseModule from "./courseModules";
+import Module from "./module";
+import User from "./user";
 
-
-class Model {
-
-    /**
-     * @description Users | User Model
-     */
+class Models {
     user() {
-        return database.User
+        return User;
     }
 
+    course() {
+        return Course;
+    }
+
+    activity() {
+        return Activity
+    };
+
+    module() {
+        return Module
+    }
+
+    courseModule() {
+        return CourseModule
+    }
+
+    courseActivity() {
+        return CourseActivity
+    }
 }
 
-export default Model;
+export default Models;
