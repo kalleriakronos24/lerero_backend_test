@@ -13,7 +13,6 @@ class JwtAuthenticate {
      */
     authenticateToken(req, res, next) {
 
-        
         const header = req.headers['authorization'];
 
         const token = header && header.split(' ')[1];
@@ -29,7 +28,8 @@ class JwtAuthenticate {
             if (err) {
                 return res.sendStatus(403);
             }
-
+            req.user = data
+            req.roles = ['administrator','provider','learner'];
             next();
         });
     }

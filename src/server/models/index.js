@@ -1,4 +1,5 @@
 import Activity from "./activity";
+import Auth from "./auth";
 import Course from "./course";
 import CourseActivity from "./courseActivity";
 import CourseModule from "./courseModules";
@@ -28,6 +29,10 @@ class Models {
 
     courseActivity() {
         return CourseActivity
+    }
+
+    auth() {
+        return Auth;
     }
 }
 

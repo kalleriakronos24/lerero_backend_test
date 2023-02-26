@@ -34,7 +34,6 @@ class AuthService {
         return hashPassword;
     };
 
-
     /**
      * 
      * @param {*} response Response
@@ -88,7 +87,6 @@ class AuthService {
 
         const validateUser = await this.validateUser(username);
 
-        console.log('validate >> ', validateUser);
         if (!validateUser) {
             this.util.setError(401, "Username not found");
             this.util.send(res);
@@ -101,9 +99,14 @@ class AuthService {
 
             const userData = await this.model.user().findOne({ username })
 
-            const token = await this.generateToken({ ...userData });
+            const token = await this.generateToken({ userData });
 
-            this.util.setSuccess(201, "Login Successful", { token });
+            const setToken = await this.model.auth().create({
+                user : userData._id,
+                token : token
+            });
+
+            this.util.setSuccess(201, "Login Successful", { setToken });
             return this.util.send(res);
         } else {
             this.util.setError(401, "password is incorrect, please try again");
