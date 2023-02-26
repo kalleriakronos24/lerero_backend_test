@@ -18,6 +18,10 @@ const CourseModuleSchema = new mongoose.Schema({
         type : Schema.Types.ObjectId,
         ref : 'modules'
     },
+    status : {
+        type : String,
+        default : 'ongoing'
+    },
     activities : [{
         type : Schema.Types.ObjectId,
         ref : 'courseActivities'

@@ -10,6 +10,10 @@ const CourseActivitySchema = new mongoose.Schema({
         type : Date,
         default : new Date()
     },
+    status : {
+        type : String,
+        default : 'ongoing'
+    },
     activity : {
         type : Schema.Types.ObjectId,
         ref : 'activities'

@@ -4,6 +4,7 @@ import CourseActivityRoutes from './course-activity.routes';
 import CourseModulesRoutes from './course-module.routes';
 import CourseRoutes from './course.routes';
 import ModuleRoutes from './module.routes';
+import UserRoutes from './user.routes';
 
 class Routes {
     route(){
@@ -13,7 +14,8 @@ class Routes {
             new ActivityRoutes().route(),
             new CourseRoutes().route(),
             new CourseActivityRoutes().route(),
-            new CourseModulesRoutes().route()
+            new CourseModulesRoutes().route(),
+            new UserRoutes().route()
         ]
     };
 };

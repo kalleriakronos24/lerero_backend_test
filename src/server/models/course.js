@@ -22,10 +22,10 @@ const CourseSchema = new mongoose.Schema({
         type : String,
         required: true
     }],
-    learner : {
+    learner : [{
         type : Schema.Types.ObjectId,
         ref : 'users'
-    },
+    }],
     provider : {
         type : Schema.Types.ObjectId,
         ref : 'users'
@@ -37,7 +37,8 @@ const CourseSchema = new mongoose.Schema({
         type: Date
     },
     status : {
-        type : String
+        type : String,
+        default : 'ongoing'
     },
     courseModules : [{
         type : Schema.Types.ObjectId,

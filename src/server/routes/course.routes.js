@@ -15,6 +15,7 @@ class CourseRoutes extends Controller {
         return [
             this.router.get('/course', this.course.getCourses),
             this.router.get('/course/:id', this.course.getCourseById),
+            this.router.get('/course/learner/:id', this.course.getCourseByLearnerId),
             this.router.post('/course',this.auth.rolesAllowed('administrator', 'provider'), this.course.postCourse),
             this.router.put('/course/:id',this.auth.rolesAllowed('administrator', 'provider'), this.course.updateCourse),
             this.router.delete('/course/:id',this.auth.rolesAllowed('administrator', 'provider'), this.course.deleteCourse),

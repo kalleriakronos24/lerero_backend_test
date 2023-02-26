@@ -4,12 +4,14 @@ import CourseActivityController from './course-activity.controller';
 import CourseModuleController from './course-module.controller';
 import CourseController from './course.controller';
 import ModuleController from './module.controller';
+import UserController from './user.controller';
 
 class Controller {
 
-    /**
-     * Authentication Controller
-     */
+    userController() {
+        return new UserController();
+    };
+    
     authController() {
         return new AuthController();
     }

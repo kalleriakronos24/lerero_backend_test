@@ -17,6 +17,12 @@ class CourseController extends Service {
         return await course.getCourseById(param, res);
     }
 
+    async getCourseByLearnerId(req, res) {
+        const param = req.params
+        const course = super.courseService();
+        return await course.getCourseByLearnerId(param, res);
+    }
+
     async postCourse(req, res) {
         const course = super.courseService();
         return await course.postCourse(req.body.data, res);

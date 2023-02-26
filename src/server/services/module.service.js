@@ -10,7 +10,7 @@ class ModuleService {
 
     async getModules(request, response) {
         try {
-            const data = await this.model.module().find().populate('activity').exec()
+            const data = await this.model.module().find().exec()
             this.util.setSuccess(200, "success", data);
             return this.util.send(response);
         } catch (error) {
@@ -21,7 +21,7 @@ class ModuleService {
 
     async getModuleById(param, response) { 
         try {
-            const data = await this.model.module().findById(param.id).populate('activity').exec()
+            const data = await this.model.module().findById(param.id).exec()
             this.util.setSuccess(200, "success", data);
             return this.util.send(response);
         } catch (error) {

@@ -90,9 +90,7 @@ class App extends Routes {
         app.use(bodyParser.urlencoded({ extended: false }))
         app.disable('x-powered-by')
 
-        // routes
-        app.use('/api/v1', super.route())
-
+        
 
         // cookie parser and CSRF Middleware
         app.use(cookieParser());
@@ -112,6 +110,10 @@ class App extends Routes {
             }
             next();
         });
+
+        // routes
+        app.use('/api/v1', super.route())
+
 
 
 

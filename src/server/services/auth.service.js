@@ -34,29 +34,35 @@ class AuthService {
         return hashPassword;
     };
 
-    /**
-     * 
-     * @param {*} response Response
-     * @param {*} user { email: string , password: string }
-     * @async userRegister
-     * @description Service to Register user to the Database
-     * @returns Users { id: number, fullname: string, username: string, wallet: number }
-     */
     async userRegister(response, user) {
 
-        const { password } = user;
+        try {
+            const { password } = user;
 
-        // else 
+            // else 
+            const check = await this.checkExist(user.username, user.email);
 
-        const hashPassword = await this.hashPassword(password);
+            if (check.exist) {
+                this.util.setError(404, check.message);
+                this.util.send(response);
+                return;
+            }
 
-        const newUser = await this.model.user().create({
-            ...user,
-            password : hashPassword
-        });
-        
-        this.util.setSuccess(201, "User Created!", newUser);
-        return this.util.send(response);
+            const hashPassword = await this.hashPassword(password);
+            const newUser = await this.model.user().create({
+                ...user,
+                password: hashPassword
+            });
+
+            this.util.setSuccess(201, "User Created!", newUser);
+            this.util.send(response);
+            return;
+        } catch (error) {
+            this.util.setError(404, error.message);
+            this.util.send(response);
+            return;
+        }
+
     }
 
     /**
@@ -78,17 +84,16 @@ class AuthService {
     /**
      * 
      * @param {*} res Reponse
-     * @param {*} user { password: string , email: string }
+     * @param {*} user { password: string , username: string }
      * @description Service to User to Login, checks if data the user's input is valid or not
-     * @returns JwtToken | if email not found return json { message : "Email not found" } | if email is valid but the password is incorrect return json { message : "password is incorrect, try again" }
      */
     async login(res, user) {
         const { password, username } = user;
 
         const validateUser = await this.validateUser(username);
 
-        if (!validateUser) {
-            this.util.setError(401, "Username not found");
+        if (!validateUser.exist) {
+            this.util.setError(401, validateUser.message);
             this.util.send(res);
             return;
         }
@@ -96,23 +101,34 @@ class AuthService {
         const isPasswordMatch = await this.comparePassword(password, username);
 
         if (isPasswordMatch) {
-
             const userData = await this.model.user().findOne({ username })
 
-            const token = await this.generateToken({ userData });
+            if (userData.status === 'inactive') {
+                this.util.setError(401, "failed. you have your account inactive!");
+                return this.util.send(res);
+            }
 
+            if (userData.status === 'blocked') {
+                this.util.setError(401, "failed. you have your account blocked!");
+                return this.util.send(res);
+            };
+
+
+            const token = await this.generateToken({ userData });
             const setToken = await this.model.auth().create({
+                user: userData._id,
+                token: token
+            })
+            this.util.setSuccess(201, "Login Successful", {
                 user : userData._id,
+                userRole : userData.userRole,
                 token : token
             });
-
-            this.util.setSuccess(201, "Login Successful", { setToken });
             return this.util.send(res);
         } else {
-            this.util.setError(401, "password is incorrect, please try again");
+            this.util.setError(401, "there is no data with this information. please try again.",);
             return this.util.send(res);
         }
-
     };
 
     /**
@@ -121,15 +137,63 @@ class AuthService {
      * @description to validate user, literally using the other method ( checkEmailIfExist )
      * @returns Boolean 
      */
-    async validateUser(body) {
-
-        const { username } = body;
+    async validateUser(username) {
 
         const isUsernameExist = await this.model.user().findOne({
-            username
+            username: username
         });
 
-        return !isUsernameExist;
+        const isEmailExist = await this.model.user().findOne({
+            email: username
+        })
+
+
+        if (!isUsernameExist) {
+            return {
+                exist: !isUsernameExist,
+                message: 'there is no data with this username'
+            }
+        } else if (!isEmailExist) {
+            return {
+                exist: !isEmailExist,
+                message: 'there is no data with this email'
+            }
+        } else {
+            return {
+                exist: false,
+                message: 'there is no data with this username / email'
+            }
+        }
+    }
+
+    async checkExist(username, email) {
+
+        const isUsernameExist = await this.model.user().findOne({
+            username: username
+        }).count()
+
+        const isEmailExist = await this.model.user().findOne({
+            email: email
+        }).count()
+
+        if (isUsernameExist > 0) {
+            return {
+                exist: true,
+                message: 'there is already data with this username'
+            }
+        }
+
+        if (isEmailExist > 0) {
+            return {
+                exist: true,
+                message: 'there is already data with this email'
+            }
+        }
+
+        return {
+            exist: false
+        }
+
     }
 };
 
